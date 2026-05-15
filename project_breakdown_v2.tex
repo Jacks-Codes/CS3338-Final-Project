@@ -1,0 +1,162 @@
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage[margin=1in, headheight=14pt]{geometry}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{tocloft}
+
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue,
+    pdftitle={Project Breakdown -- 2D Platformer}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Project Breakdown}
+\fancyhead[R]{\small 2D Platformer Game}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+\begin{document}
+
+% ── Cover ─────────────────────────────────────────────────────────────────────
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+    {\Huge\bfseries Project Breakdown\par}
+    \vspace{0.4cm}
+    \rule{\linewidth}{0.5pt}
+    \vspace{0.4cm}
+    {\LARGE 2D Platformer Game\par}
+    \vspace{0.3cm}
+    {\large Components, Tools, and Dependency Manifest\par}
+    \vspace{2cm}
+    \begin{tabular}{rl}
+        \textbf{Version:} & 1.0 \\[4pt]
+        \textbf{Date:}    & \today \\[4pt]
+        \textbf{Authors:} & Development Team \\
+    \end{tabular}
+    \vfill
+    \rule{\linewidth}{0.5pt}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ── 1. Overview ───────────────────────────────────────────────────────────────
+\section{Project Overview}
+
+A 2D sprite-based platformer with three containerized services: a Pygame game client, a FastAPI leaderboard backend, and a PostgreSQL database. Services communicate over a shared Docker bridge network.
+
+% ── 2. Screens ────────────────────────────────────────────────────────────────
+\section{Game Screens}
+
+\begin{longtable}{p{3.5cm} p{9.5cm}}
+    \toprule
+    \textbf{Screen} & \textbf{Description} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Screen} & \textbf{Description} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    Main Menu      & Title, Start, Leaderboard, and Quit buttons. Background music. \\
+    \addlinespace
+    Level Select   & Grid of levels. Lock/unlock state read from local save file. \\
+    \addlinespace
+    Gameplay       & Core loop: player movement, physics, collision, enemies, HUD, collectibles. \\
+    \addlinespace
+    Pause Menu     & Overlay on gameplay. Resume, Restart, Main Menu. \\
+    \addlinespace
+    Game Over      & Displays score. Retry or return to Main Menu. \\
+    \addlinespace
+    Victory        & Score summary. Submits result to leaderboard API. \\
+    \addlinespace
+    Leaderboard    & Fetches and displays top scores from the backend. \\
+\end{longtable}
+
+% ── 3. API ────────────────────────────────────────────────────────────────────
+\section{Leaderboard API}
+
+FastAPI service with four endpoints:
+
+\begin{longtable}{p{4cm} p{1.8cm} p{7.2cm}}
+    \toprule
+    \textbf{Route} & \textbf{Method} & \textbf{Description} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Route} & \textbf{Method} & \textbf{Description} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    \texttt{/health}         & GET    & Service health check. \\
+    \texttt{/scores}         & GET    & Returns top N scores ordered by score descending. \\
+    \texttt{/scores}         & POST   & Accepts player name and score; writes to database. \\
+    \texttt{/scores/\{id\}}  & DELETE & Removes a score record by ID. \\
+\end{longtable}
+
+% ── 4. Dependencies ───────────────────────────────────────────────────────────
+\section{Dependency Manifest}
+
+\subsection{Game Client --- \texttt{python:3.12-slim}}
+
+\begin{longtable}{p{4.5cm} p{2cm} p{7cm}}
+    \toprule
+    \textbf{Package} & \textbf{Type} & \textbf{Purpose} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Package} & \textbf{Type} & \textbf{Purpose} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    \texttt{pygame}            & Python & Rendering, input, audio, sprites \\
+    \texttt{requests}          & Python & HTTP calls to the leaderboard API \\
+    \texttt{pytmx}             & Python & Tiled \texttt{.tmx} map file loading \\
+    \texttt{python-dotenv}     & Python & Environment variable loading \\
+    \texttt{libsdl2-dev}       & System & SDL2 core (window, input) \\
+    \texttt{libsdl2-image-dev} & System & Sprite/image loading \\
+    \texttt{libsdl2-mixer-dev} & System & Audio playback \\
+    \texttt{libsdl2-ttf-dev}   & System & Font rendering \\
+    \texttt{libx11-dev}        & System & Display output (X11) \\
+\end{longtable}
+
+\subsection{Leaderboard API --- \texttt{python:3.12-slim}}
+
+\begin{longtable}{p{4.5cm} p{2cm} p{7cm}}
+    \toprule
+    \textbf{Package} & \textbf{Type} & \textbf{Purpose} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Package} & \textbf{Type} & \textbf{Purpose} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    \texttt{fastapi}           & Python & Web framework and routing \\
+    \texttt{uvicorn[standard]} & Python & ASGI server \\
+    \texttt{sqlalchemy}        & Python & ORM / database layer \\
+    \texttt{psycopg2-binary}   & Python & PostgreSQL driver \\
+    \texttt{pydantic}          & Python & Request and response validation \\
+    \texttt{python-dotenv}     & Python & Environment variable loading \\
+\end{longtable}
+
+\subsection{Database --- \texttt{postgres:16-alpine}}
+
+Official PostgreSQL image. No custom Dockerfile required. Schema seeded via \texttt{db/init.sql} mounted to \texttt{/docker-entrypoint-initdb.d/}. Data persisted to a named Docker volume.
+
+\end{document}
