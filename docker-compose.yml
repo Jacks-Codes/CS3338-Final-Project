@@ -1,0 +1,90 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 2D Platformer Game — Docker Compose
+#
+# Services:
+#   game       — The game client (Pygame / Python, built from local Dockerfile)
+#   api        — Leaderboard / score REST API (FastAPI)
+#   db         — PostgreSQL database (persistent score storage)
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Game Client ─────────────────────────────────────────────────────────────
+  # Runs the Python/Pygame game. Needs access to the host display (X11 or
+  # equivalent) to render a window. On Linux this is straightforward via
+  # DISPLAY + /tmp/.X11-unix. On macOS/Windows you'll need XQuartz or WSLg.
+  game:
+    build:
+      context: ./game
+      dockerfile: Dockerfile
+    image: platformer-game:latest
+    container_name: platformer_game
+    environment:
+      - DISPLAY=${DISPLAY}           # pass host display for window rendering
+      - API_URL=http://api:8000      # game talks to the API by service name
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix  # X11 socket for display (Linux)
+      - ./game:/app                    # live-reload source during development
+    depends_on:
+      - api
+    networks:
+      - platformer_net
+    restart: "no"                    # don't auto-restart a game session
+
+  # ── Leaderboard API ──────────────────────────────────────────────────────────
+  # Lightweight FastAPI service. Exposes endpoints to submit and retrieve
+  # high scores. Swappable for any other backend language/framework.
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: platformer-api:latest
+    container_name: platformer_api
+    environment:
+      - DATABASE_URL=postgresql://platformer:platformer@db:5432/platformer_db
+    ports:
+      - "8000:8000"                  # expose locally for dev/testing
+    volumes:
+      - ./api:/app                   # live-reload source during development
+    depends_on:
+      db:
+        condition: service_healthy   # don't start until DB is ready
+    networks:
+      - platformer_net
+    restart: unless-stopped
+
+  # ── Database ─────────────────────────────────────────────────────────────────
+  # PostgreSQL for score persistence. Credentials are placeholder values —
+  # swap for environment variables or Docker secrets before any real deployment.
+  db:
+    image: postgres:16-alpine
+    container_name: platformer_db
+    environment:
+      - POSTGRES_USER=platformer
+      - POSTGRES_PASSWORD=platformer   # TODO: replace with secret in production
+      - POSTGRES_DB=platformer_db
+    ports:
+      - "5432:5432"                  # exposed for local DB inspection tools
+    volumes:
+      - db_data:/var/lib/postgresql/data   # named volume so data survives restarts
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  # schema seed script
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U platformer -d platformer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - platformer_net
+    restart: unless-stopped
+
+# ── Named Volumes ──────────────────────────────────────────────────────────────
+volumes:
+  db_data:
+    driver: local
+
+# ── Networks ───────────────────────────────────────────────────────────────────
+networks:
+  platformer_net:
+    driver: bridge

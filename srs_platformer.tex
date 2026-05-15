@@ -1,0 +1,338 @@
+\documentclass[12pt, letterpaper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[margin=1in, headheight=14pt]{geometry}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tocloft}
+
+% ── Hyperref setup ────────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    pdftitle={Software Requirements Specification -- 2D Platformer},
+    pdfauthor={Development Team},
+}
+
+% ── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Software Requirements Specification}
+\fancyhead[R]{\small 2D Platformer Game}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Section formatting ────────────────────────────────────────────────────────
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{}{0em}{}
+
+% ── TOC formatting ────────────────────────────────────────────────────────────
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  COVER PAGE
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries Software Requirements Specification\par}
+    \vspace{0.5cm}
+    \rule{\linewidth}{0.5pt}
+    \vspace{0.5cm}
+
+    {\LARGE 2D Platformer Game\par}
+    \vspace{0.3cm}
+    {\large Version 1.0\par}
+
+    \vspace{2cm}
+
+    \begin{tabular}{rl}
+        \textbf{Project:}   & 2D Platformer Game \\[4pt]
+        \textbf{Document:}  & Software Requirements Specification (SRS) \\[4pt]
+        \textbf{Version:}   & 1.0 \\[4pt]
+        \textbf{Status:}    & Draft \\[4pt]
+        \textbf{Date:}      & \today \\[4pt]
+        \textbf{Authors:}   & Development Team \\[4pt]
+    \end{tabular}
+
+    \vfill
+
+    \rule{\linewidth}{0.5pt}
+    {\small This document is intended for internal academic use only.}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  TABLE OF CONTENTS
+% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  VERSIONS TABLE
+% ══════════════════════════════════════════════════════════════════════════════
+\section*{Version History}
+\addcontentsline{toc}{section}{Version History}
+
+\begin{longtable}{>{\bfseries}p{1.2cm} p{2.2cm} p{3.5cm} p{6.5cm}}
+    \toprule
+    \textbf{Version} & \textbf{Date} & \textbf{Author(s)} & \textbf{Description of Changes} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Version} & \textbf{Date} & \textbf{Author(s)} & \textbf{Description of Changes} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+    1.0 & \today & Development Team & Initial draft. Established document structure, introduction, external interface requirements, and legal/ethical considerations. \\
+    \addlinespace
+    % Future revisions go below this line
+    % 1.1 & YYYY-MM-DD & Author & Description \\
+\end{longtable}
+
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  SECTION 1 — INTRODUCTION
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Introduction}
+
+\subsection{Purpose}
+
+This Software Requirements Specification (SRS) defines the requirements for a 2D sprite-based platformer game (hereafter referred to as \textit{the Game}). The document captures the intended behavior, interfaces, and constraints of the system at a high level. Its primary purpose is to demonstrate the ability to produce structured software documentation using standard SRS conventions, and to serve as a reference artifact throughout development.
+
+\subsection{Intended Audience}
+
+This document is intended for the following audiences:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Developers} — to understand functional scope and technical constraints.
+    \item \textbf{Instructors / Evaluators} — to assess the completeness of the documentation artifact.
+    \item \textbf{QA / Testers} — to derive test cases from stated requirements.
+    \item \textbf{Future Contributors} — to onboard to the project with a clear reference baseline.
+\end{itemize}
+
+\subsection{Project Overview}
+
+The Game is a 2D side-scrolling platformer featuring sprite-based characters and environments. Players navigate levels by running, jumping, and interacting with obstacles and enemies. The game is developed primarily as a learning exercise to demonstrate tooling integration and software engineering processes.
+
+The scope of this document is intentionally kept general; specific gameplay mechanics, level design, and feature sets are subject to iterative refinement and will be reflected in subsequent SRS revisions.
+
+\subsection{Definitions, Acronyms, and Abbreviations}
+
+See the \hyperref[sec:glossary]{Glossary} at the end of this document.
+
+\subsection{References}
+
+\begin{itemize}[noitemsep]
+    \item IEEE Std 830-1998 — \textit{IEEE Recommended Practice for Software Requirements Specifications}
+    \item Course project guidelines (provided separately)
+\end{itemize}
+
+\subsection{Overview of Document}
+
+The remainder of this document is organized as follows:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Section 2} — External Interface Requirements (UI and software interfaces)
+    \item \textbf{Section 3} — Legal and Ethical Considerations
+    \item \textbf{Glossary} — Acronyms and terms used throughout the document
+\end{itemize}
+
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  SECTION 2 — EXTERNAL INTERFACE REQUIREMENTS
+% ══════════════════════════════════════════════════════════════════════════════
+\section{External Interface Requirements}
+
+\subsection{User Interface}
+
+The game presents a graphical user interface rendered in a 2D viewport. The UI consists of two primary surfaces:
+
+\subsubsection{In-Game HUD}
+
+During active gameplay, the following elements shall be visible to the player at all times:
+
+\begin{itemize}[noitemsep]
+    \item Player health or life indicator
+    \item Score or point counter
+    \item Level or stage identifier
+    \item Pause functionality accessible via keyboard input
+\end{itemize}
+
+\subsubsection{Menus}
+
+The game shall include the following menu screens:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Main Menu} — Start game, access settings, and exit
+    \item \textbf{Pause Menu} — Resume, restart level, and return to main menu
+    \item \textbf{Game Over / Victory Screen} — Display final score and navigation options
+\end{itemize}
+
+All menus shall be navigable via keyboard input. Mouse support is considered a stretch goal and is not required in the initial version.
+
+\subsection{Software Interfaces}
+
+\subsubsection{Game Engine / Runtime}
+
+The game is built on a 2D game framework or engine (e.g., Pygame, Godot, Unity 2D, or equivalent). The specific engine is subject to the team's implementation decision; this document does not prescribe one. The engine must support:
+
+\begin{itemize}[noitemsep]
+    \item Sprite rendering and animation
+    \item Tile-based or freeform 2D level loading
+    \item Collision detection between entities and environment
+    \item Basic audio playback (sound effects and background music)
+\end{itemize}
+
+\subsubsection{Operating System}
+
+The game shall target desktop operating systems. Support for at minimum one of the following is required:
+
+\begin{itemize}[noitemsep]
+    \item Windows 10 or later
+    \item macOS 12 (Monterey) or later
+    \item Linux (Ubuntu 22.04 LTS or equivalent)
+\end{itemize}
+
+\subsubsection{Input Devices}
+
+The primary input interface shall be a standard keyboard. Controller support is considered a secondary, optional interface.
+
+\subsubsection{Asset Pipeline}
+
+Sprite sheets, tilesets, and audio files shall be loaded from a structured local asset directory. No external network calls are required for asset delivery in the initial version. All assets must be in formats supported natively by the chosen engine (e.g., PNG for images, WAV/OGG for audio).
+
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  SECTION 3 — LEGAL AND ETHICAL CONSIDERATIONS
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Legal and Ethical Considerations}
+
+\subsection{User Data and Privacy}
+
+In its current scope, the game does not collect, transmit, or store personally identifiable information (PII). The following data handling behaviors apply:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Local save data} — Player progress (e.g., high scores, completed levels) may be written to a local file on the user's machine. This data contains no PII and is not transmitted externally.
+    \item \textbf{No accounts or authentication} — The game does not require user registration, login, or any form of identity verification.
+    \item \textbf{No telemetry} — No analytics, crash reports, or usage metrics are collected in the initial version. If telemetry is added in a future revision, this section must be updated and users must be informed via an in-game disclosure.
+\end{itemize}
+
+Should networked features (e.g., leaderboards, multiplayer) be introduced in a future version, the development team must revisit data handling obligations and ensure compliance with applicable privacy regulations, including but not limited to:
+
+\begin{itemize}[noitemsep]
+    \item California Consumer Privacy Act (CCPA)
+    \item General Data Protection Regulation (GDPR), if distributed to EU users
+    \item Children's Online Privacy Protection Act (COPPA), if the audience includes users under 13
+\end{itemize}
+
+\subsection{Intellectual Property}
+
+All game assets (sprites, tilesets, audio, fonts) must either be:
+
+\begin{itemize}[noitemsep]
+    \item Original works created by the development team, or
+    \item Licensed under terms that permit use in this project (e.g., Creative Commons, open-source licenses)
+\end{itemize}
+
+Use of unlicensed or improperly attributed third-party assets constitutes copyright infringement. The development team is responsible for maintaining records of asset provenance and license compliance.
+
+\subsection{Accessibility}
+
+While a comprehensive accessibility audit is outside the scope of this version, the following baseline considerations should be observed:
+
+\begin{itemize}[noitemsep]
+    \item UI text should maintain sufficient contrast ratios against backgrounds
+    \item Key bindings should be rebindable where feasible to accommodate motor accessibility needs
+    \item Audio cues should not be the sole indicator of critical game events (consider visual alternatives)
+\end{itemize}
+
+\subsection{Moral Considerations}
+
+The game's content should be appropriate for a general audience unless the project explicitly targets a specific rating category. The following content guidelines apply by default:
+
+\begin{itemize}[noitemsep]
+    \item No graphic depictions of violence, gore, or self-harm
+    \item No content that demeans or stereotypes individuals based on protected characteristics
+    \item No gambling mechanics (e.g., loot boxes with real-money implications) without explicit disclosure and compliance with applicable regulations
+\end{itemize}
+
+If the game is distributed publicly (beyond academic submission), the team should consider obtaining an ESRB or PEGI rating to set appropriate content expectations for users.
+
+\newpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+%  GLOSSARY
+% ══════════════════════════════════════════════════════════════════════════════
+\section{Glossary}
+\label{sec:glossary}
+
+The following table defines acronyms and key terms used throughout this document.
+
+\vspace{0.5em}
+\begin{longtable}{>{\bfseries}p{3cm} p{10.5cm}}
+    \toprule
+    \textbf{Term / Acronym} & \textbf{Definition} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Term / Acronym} & \textbf{Definition} \\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot
+
+    2D          & Two-Dimensional. Refers to the graphical plane in which the game is rendered, using X and Y axes only. \\
+    \addlinespace
+    API         & Application Programming Interface. A defined set of protocols for building and integrating software. \\
+    \addlinespace
+    CCPA        & California Consumer Privacy Act. A state-level data privacy law applicable to businesses collecting data from California residents. \\
+    \addlinespace
+    COPPA       & Children's Online Privacy Protection Act. A U.S. federal law that imposes requirements on operators of websites and online services directed to children under 13. \\
+    \addlinespace
+    ESRB        & Entertainment Software Rating Board. A self-regulatory organization that assigns content ratings to video games in North America. \\
+    \addlinespace
+    GDPR        & General Data Protection Regulation. A comprehensive data protection and privacy regulation enacted by the European Union. \\
+    \addlinespace
+    HUD         & Heads-Up Display. Persistent on-screen UI elements shown to the player during gameplay (e.g., health bar, score). \\
+    \addlinespace
+    OGG         & Ogg Vorbis. An open-source, lossy audio compression format commonly used in games. \\
+    \addlinespace
+    PEGI        & Pan European Game Information. A European video game content rating system. \\
+    \addlinespace
+    PII         & Personally Identifiable Information. Any data that could be used to identify a specific individual. \\
+    \addlinespace
+    PNG         & Portable Network Graphics. A lossless raster image format widely used for game sprites and UI assets. \\
+    \addlinespace
+    QA          & Quality Assurance. The process of verifying that a software product meets its defined requirements. \\
+    \addlinespace
+    SRS         & Software Requirements Specification. A formal document describing the intended behavior, interfaces, and constraints of a software system. \\
+    \addlinespace
+    UI          & User Interface. The visual and interactive elements through which a user interacts with the software. \\
+    \addlinespace
+    WAV         & Waveform Audio File Format. An uncompressed audio format used for sound effects and music. \\
+
+\end{longtable}
+
+\end{document}
