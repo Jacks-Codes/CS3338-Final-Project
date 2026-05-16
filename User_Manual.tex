@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+\title{User Manual: 2D Sprite-Based Platformer}
+\author{Group 6}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Project Overview}
+This project is a 2D sprite-based platformer adventure game designed with a focus on modular architecture and containerized deployment. The software utilizes sprite-based physics, collision detection, and a reactive AI system to provide a comprehensive gaming experience.
+
+\section{Objectives and Purpose}
+The primary goal of this software is to demonstrate the integration of modern software engineering tools, including Docker for environment consistency, Jira for agile management, and TestRail for rigorous quality assurance. 
+
+\section{Key Features}
+\begin{itemize}
+    \item \textbf{Core Mechanics:} Fluid character movement, gravity-based jumping, and precise collision detection.
+    \item \textbf{Combat System:} Modular weapon logic and ability execution synced with sprite animations.
+    \item \textbf{Enemy AI:} Patrol patterns and detection scripts for interactive gameplay.
+    \item \textbf{Persistent HUD:} Real-time status tracking for player health, scoring, and level progress.
+\end{itemize}
+
+\section{Access and Installation}
+To access and run the project locally, follow these steps:
+\begin{enumerate}
+    \item Clone the repository: \url{https://github.com/Jacks-Codes/CS3338-Final-Project.git}
+    \item Ensure Docker and Docker-Compose are installed on your system.
+    \item Navigate to the project root and run: \texttt{docker-compose up --build}
+    \item Access the application via the local Nginx port specified in the configuration.
+\end{enumerate}
+
+\section{Project Management \& Quality Assurance}
+The development lifecycle was managed using industry-standard tools to ensure high-quality delivery.
+\begin{itemize}
+    \item \textbf{Jira Board:} Task delegation and bug tracking can be viewed at: \\
+    \url{https://cs3338-group6.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog}
+    \item \textbf{TestRail Documentation:} Comprehensive milestone reports for Snapshots 2, 3, and 4 are included in the \texttt{/TestRail_Reports} directory of the repository.
+\end{itemize}
+
+\end{document}
