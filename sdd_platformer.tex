@@ -1,0 +1,174 @@
+% SASYR 2025 - Template based on:
+% samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{booktabs} % For professional table formatting
+
+\begin{document}
+%
+% ==========================================
+% i. COVER PAGE INFO
+% ==========================================
+\title{Software Design Document (SDD): The Game}
+\subtitle{A 2D Side-Scrolling Platformer Engine Specification}
+
+\author{Lead Designer\inst{1} \and
+Physics Programmer\inst{2} \and
+Level Designer\inst{3}}
+
+\authorrunning{L. Designer et al.}
+
+\institute{Core Systems Department, Pixel Studio, Portugal\\
+\email{designer@pixelstudio.pt}
+\and
+Gameplay Mechanics Lab, Tech Institute, Portugal\\
+\email{physics@techinst.pt}
+\and
+World Building Division, Creative Arts Academy, Portugal\\
+\email{levels@creativearts.pt}
+}
+
+\maketitle              % typeset the header of the contribution
+
+\begin{abstract}
+This document serves as the primary Software Design Document (SDD) for the 2D side-scrolling game project \textit{The Game}. It outlines the application architecture, kinematic equations, control mapping pipelines, database designs, and system component interfaces required for cross-platform compliance. 
+
+\keywords{Software Design Document \and Game Architecture \and SQLite \and Kinematics.}
+\end{abstract}
+
+% ==========================================
+% ii. TABLE OF CONTENTS
+% ==========================================
+% Note: Springer LLNCS style generates a TOC automatically if required,
+% but we explicitly map the requested structure here.
+\addtocontents{toc}{\protect\contentsline{section}{1 Introduction}{1}}
+\addtocontents{toc}{\protect\contentsline{section}{2 System Architecture}{2}}
+\addtocontents{toc}{\protect\contentsline{section}{3 User Interface}{3}}
+\addtocontents{toc}{\protect\contentsline{section}{4 Glossary}{4}}
+\addtocontents{toc}{\protect\contentsline{section}{5 References}{5}}
+
+% ==========================================
+% iii. VERSIONS TABLE
+% ==========================================
+\section*{Versions Table}
+\begin{table}[h]
+\centering
+\caption{Document Revision History}
+\label{tab:versions}
+\begin{tabular}{|p{1.5cm}|p{2.5cm}|p{5.5cm}|p{2.5cm}|}
+\hline
+\textbf{Version} & \textbf{Date} & \textbf{Description} & \textbf{Author} \\ \hline
+1.0 & May 15, 2026 & Initial Snapshot: Core physics and systems. & Project Lead \\ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+% ==========================================
+% iv. SECTIONS
+% ==========================================
+
+\section{Introduction}
+
+\subsection{Purpose}
+This document provides a comprehensive technical overview of \textit{The Game}, a 2D side-scrolling platformer. It serves as the primary technical baseline for developers, artists, and quality assurance testers to ensure consistency throughout the implementation of the game.
+
+\subsection{Intended Audience}
+The target audience includes software engineers implementing physics algorithms, level designers building game spaces via data arrays, and QA technicians validating kinematical integrity against defined thresholds.
+
+\subsection{Overview}
+\textit{The Game} focuses on high-momentum platforming mechanics. Players navigate grid-based environments using an array of physics-defying abilities. The foundational design paradigm emphasizes a decoupled architecture to let mechanics iterate independently of rendering updates.
+
+
+\section{System Architecture}
+
+\subsection{Workflow Execution}
+The application executes within a deterministic, fixed-timestep game loop ticking at a strict 60Hz. The execution order for every frame is defined sequentially as follows:
+\begin{enumerate}
+    \item \textbf{Input Capture:} Read hardware register maps (Keyboard/Controller).
+    \item \textbf{State Evaluation:} Process transitions inside the character Finite State Machine (FSM).
+    \item \textbf{Physics Integration:} Apply gravity vectors and impulse velocity parameters.
+    \item \textbf{Collision Resolution:} Query structural layouts and shift coordinates outwards.
+    \item \textbf{Rendering Pipeline:} Generate the graphic output matrix.
+\end{enumerate}
+
+\subsection{Module Breakdown}
+The application splits core behaviors into isolation barriers:
+\begin{itemize}
+    \item \textbf{Kinematic Controller:} Resolves motion velocity math without standard physics engine jitter.
+    \item \textbf{Environmental Collision Module:} Inspects targeted tile layouts to report collision hits.
+    \item \textbf{Event Manager:} Dispatches visual particle feedback and dynamic audio cues.
+    \item \textbf{Save System:} Serializes structural parameters into JSON configurations.
+\end{itemize}
+
+\noindent Vertical movement computations utilize a constant gravity scalar to determine the instantaneous speed vector $v_y$ at a given time step $t$:
+\begin{equation}
+v_y = v_0 - (g \cdot t)
+\end{equation}
+
+
+\section{User Interface}
+
+\subsection{How to Use (Controls)}
+The input registration system translates physical inputs into unified logical controls. Table~\ref{tab:controls} highlights the primary hardware map allocations.
+
+\begin{table}[h]
+\centering
+\caption{Hardware Controller Input Map Settings}
+\label{tab:controls}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Action Trigger} & \textbf{Primary Input (Keyboard)} & \textbf{Secondary Input (Gamepad)} \\ \hline
+Move Left / Right       & A / D Keys                        & Left Analog Stick                  \\ \hline
+Jump                    & Spacebar                          & Button South (A/Cross)             \\ \hline
+Dash Impulse            & Left Shift                        & Right Trigger (R2/RT)              \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Database Explanation \& Data Management}
+Persistent metrics, profile metrics, and leaderboard historical frames map into a localized SQLite instance. Level layout configuration properties operate entirely on text-based layouts created inside external level design suites.
+
+
+% ==========================================
+% v. GLOSSARY
+% ==========================================
+\section{Glossary}
+\begin{table}[h]
+\centering
+\caption{Acronym Reference Guide}
+\label{tab:glossary}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Acronym} & \textbf{Definition} \\ \hline
+\textbf{FPS}     & Frames Per Second \\ \hline
+\textbf{FSM}     & Finite State Machine \\ \hline
+\textbf{JSON}    & JavaScript Object Notation \\ \hline
+\textbf{QA}      & Quality Assurance \\ \hline
+\textbf{SDD}     & Software Design Document \\ \hline
+\end{tabular}
+\end{table}
+
+
+% ==========================================
+% vi. REFERENCES
+% ==========================================
+% Using explicit bibitems to align cleanly with standard Springer style
+\begin{thebibliography}{8}
+
+\bibitem{sasyr}
+SASYR 2025 Submission Framework Guidelines, \url{http://sasyr.ipb.pt/}. Last accessed May 2026.
+
+\bibitem{patterns}
+Nystrom, R.: Game Programming Patterns: State Architectures. Genever Benning (2014). \url{https://gameprogrammingpatterns.com/state.html}.
+
+\bibitem{lncs}
+Springer Lecture Notes in Computer Science (LNCS) Authors Guidelines (2017).
+
+\end{thebibliography}
+
+\end{document}
